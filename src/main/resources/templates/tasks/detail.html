@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--layout.htmlでこのファイルを装飾する-->
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+>
+<head>
+    <title>タスク詳細</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div>
+        <a th:href="@{{id}/editForm(id=${id})}" class="btn btn-primary">編集</a>
+        <form
+                th:action="@{/tasks/{id}(id=${id})}"
+                th:method="delete"
+                style="display:inline;"
+                onclick="return confirm('タスクを削除しますか？');"
+        >
+            <button type="submit" class="btn btn-danger">削除</button>
+        </form>
+    </div>
+
+    <!--th:object="${〇〇}"→"*{△△}"で〇〇の△△を取得できる-->
+    <!--taskはTaskController.javaで定義している-->
+    <div th:object="${task}" class="mt-3">
+        <h2 th:text=" '#' + *{id} + ' ' + *{summary}"></h2>
+        <p th:text="*{status}"></p>
+        <!--<pre>タグは改行なしで表示される-->
+        <pre th:text="*{description}"></pre>
+    </div>
+
+</section>
+
+</body>
+</html>

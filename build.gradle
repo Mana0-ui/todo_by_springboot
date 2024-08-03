@@ -1,0 +1,60 @@
+// gradle buildシステムを拡張する宣言
+plugins {
+    // javaソースコードのコンパイル、Jarファイルの作成、テスト実行などのビルドタスクが提供される
+    id 'java'
+    // springbootフレームワークを使用する
+    id 'org.springframework.boot' version '3.1.2'
+    // springの依存関係プラグインを使用する、Javaの依存関係のバージョン管理が簡単にできる
+    id 'io.spring.dependency-management' version '1.1.2'
+}
+
+// プロジェクトのグループ名
+group = 'com.example'
+// プロジェクト自体のバージョンを設定する
+version = '0.0.1-SNAPSHOT'
+
+java {
+    // コンパイルされるJavaのバージョンを示す
+    sourceCompatibility = '17'
+}
+
+configurations {
+    //コンパイル時のみ依存関係を使用するライブラリを指定している
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+// gradle buildスクリプト内で使用されるリポジトリの設定を定義している
+// → リポジトリ：ビルドプロセス中に依存関係の解決や、必要なライブラリのダウンロードを行うために使用される
+repositories {
+    mavenCentral()
+}
+// 設定変更の反映：command + shift + I
+// spring bootに必要なさまざまなライブラリが指定されている
+// ライブラリが必要なタイミングによって書き分けがされている
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2'
+	implementation group: 'org.webjars', name: 'bootstrap', version: '5.2.3'
+//  bootstrapのバージョンを書く必要がなくなる
+    implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.52'
+	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.2.1'
+}
+
+// JUnitを使ってテストを行う
+tasks.named('test') {
+    useJUnitPlatform()
+}
+// 画面に変更その都度表示する。ホットスワッピング
+tasks.named('bootRun'){
+    sourceResources sourceSets.main
+}
